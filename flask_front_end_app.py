@@ -17,5 +17,9 @@ if __name__ == "__main__":
 	port = int(os.environ.get("PORT", 5050))
 	app.run(host='0.0.0.0', port=port, debug=False)
 
+@app.route('/data')
+def send_data():
+	return app.make_response(open('app/data/data.json').read())
+
 # set debug=True if you want to have auto-reload on changes
 # this is great for developing
