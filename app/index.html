@@ -36,21 +36,20 @@
 					</div>
 					<!-- end header -->
 
-					<div style="float:left;">
-					  <h3>Protocols</h3>
-					  <div id="protocol_chart"></div>
-					</div>
+					<p id="project_description">
+					While browsing the web, we rarely think about the complex systems and technologies that make it all possible. We simply type a URL into our browsers and then, like magic, we receive the requested page. This project will allow us to dive into the often ignored details of our web browsing. Using <a href="https://www.wireshark.org/">Wireshark</a> we captured all network packets received and sent by a laptop on a dorm residence WiFi network. We caputered packets in the following scenarios for 5 seconds each:
+					<ol>
+					<li>Idle, no web browser open</li>
+					<li>One request sent to Google homepage</li>
+					<li>One request sent to NYTimes homepage</li>
+					</ol>
+					</p>
+
 
 					<div style="float:left;">
-					  <h3>Traffic Burstiness</h3>
-					  <div id="time_chart"></div>
+					  <h4> # of Packets Captured in 5 seconds </h4>
+					  <div id="set_chart"></div>
 					</div>
-
-					<div style="float:left;">
-						<h3>Destinations</h3>
-						<div id="dest_pie_chart"></div>
-					</div>
-
 
 					<!-- visualizations here -->
 

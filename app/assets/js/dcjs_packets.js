@@ -4,13 +4,14 @@ d3.json("/data/", function(json) {
 	var cf = crossfilter(json);
 
 	// dimensions
-	var packet_no = cf.dimension(function(d) { return d['No.']; });
+	var packet_no = cf.dimension(function(d) { return d.num; });
 	// round to the nearest 250ms
-	var time = cf.dimension(function(d) { return Math.round(d.Time * 4) / 4; });
-	var source = cf.dimension(function(d) { return d.Source; });
-	var dest = cf.dimension(function(d) { return d.Destination; });
-	var protocol = cf.dimension(function(d) { return d.Protocol; });
-	var length = cf.dimension(function(d) { return d.Length; });
+	var time = cf.dimension(function(d) { return Math.round(d.time * 4) / 4; });
+	var source = cf.dimension(function(d) { return d.src; });
+	var dest = cf.dimension(function(d) { return d.dest; });
+	var protocol = cf.dimension(function(d) { return d.protocol; });
+	var length = cf.dimension(function(d) { return d.length; });
+	var set = cf.dimension(function(d) { return d.set; });
 
 	var reduce_init = function() {
 		return {
@@ -39,41 +40,43 @@ d3.json("/data/", function(json) {
 	var time_sum = time.group().reduceCount();
 	var protocol_sum = protocol.group().reduceCount();
 	var dest_sum = dest.group().reduceCount();
+	var set_sum = set.group().reduceCount();
 
 
-	var max_time = time.top(1)[0].Time;
+	var max_time = time.top(1)[0].time;
 	console.log(max_time);
 
-	window.protocol_names = _.chain(json).pluck("Protocol").uniq().value();
+	window.protocol_names = _.chain(json).pluck("protocol").uniq().value();
+	window.set_names = _.chain(json).pluck('set').uniq().value();
 
 	console.log(protocol_names);
 
 	var protocol_chart = dc
-		.barChart("#protocol_chart")
+		.barChart("#set_chart")
 		.width(750)
 		.height(200)
-		.dimension(protocol)
-		.group(protocol_sum)
+		.dimension(set)
+		.group(set_sum)
 		.centerBar(true)
-		.x(d3.scale.ordinal().domain(protocol_names))
+		.x(d3.scale.ordinal().domain(set_names))
 		.xUnits(dc.units.ordinal);
 
-	var time_chart = dc
-		.barChart("#time_chart")
-		.width(750)
-		.height(200)
-		.dimension(time)
-		.group(time_sum)
-		.centerBar(true)
-		.x(d3.scale.linear().domain([0, max_time]))
-		.xUnits(d3.time.seconds);
+	// var time_chart = dc
+	// 	.barChart("#time_chart")
+	// 	.width(750)
+	// 	.height(200)
+	// 	.dimension(time)
+	// 	.group(time_sum)
+	// 	.centerBar(true)
+	// 	.x(d3.scale.linear().domain([0, max_time]))
+	// 	.xUnits(d3.time.seconds);
 
-	var dest_pie_chart = dc
-		.pieChart("#dest_pie_chart")
-		.width(750)
-		.height(200)
-		.dimension(dest)
-		.group(dest_sum);
+	// var dest_pie_chart = dc
+	// 	.pieChart("#dest_pie_chart")
+	// 	.width(750)
+	// 	.height(200)
+	// 	.dimension(dest)
+	// 	.group(dest_sum);
 
 	dc.renderAll();
 });
