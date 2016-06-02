@@ -129,12 +129,12 @@ d3.json("/data/", function(json) {
         .margins({top: 0, right: 50, bottom: 20, left: 40})
         //.dimension(moveMonths)
         // /.group(volumeByMonthGroup)
-        .centerBar(true)
-        .gap(1)
-        .x(d3.time.scale().domain([0, 15]))
-        .round(d3.time.second.round)
-        .alwaysUseRounding(true)
-        .xUnits(d3.time.seconds);
+        // .centerBar(true)
+        // .gap(1)
+        // .x(d3.time.scale().domain([0, 15]))
+        // .round(d3.time.second.round)
+        //.alwaysUseRounding(true)
+        // .xUnits(d3.time.seconds);
 
 	dc.renderAll();
 });
