@@ -77,6 +77,64 @@ d3.json("/data/", function(json) {
 	// 	.height(200)
 	// 	.dimension(dest)
 	// 	.group(dest_sum);
+	var moveChart = dc.lineChart('#bursts-chart');
+	var timeChart = dc.barChart('#time-chart');
+
+	moveChart
+		.renderArea(true)
+        .width(990)
+        .height(200)
+        .transitionDuration(500)
+        .margins({top: 30, right: 50, bottom: 25, left: 40})
+        .dimension(time)
+        .mouseZoomable(true)
+    // Specify a "range chart" to link its brush extent with the zoom of the current "focus chart".
+        .rangeChart(timeChart)
+        .x(d3.time.scale().domain([0 , 15]))
+        .round(d3.time.second.round)
+        .xUnits(d3.time.seconds)
+        .elasticY(true)
+        .renderHorizontalGridLines(true)
+    //##### Legend
+        // Position the legend relative to the chart origin and specify items' height and separation.
+        // .legend(dc.legend().x(800).y(10).itemHeight(13).gap(5))
+        // .brushOn(false)
+        // // Add the base layer of the stack with group. The second parameter specifies a series name for use in the
+        // // legend.
+        // // The `.valueAccessor` will be used for the base layer
+        // .group(indexAvgByMonthGroup, 'Monthly Index Average')
+        // .valueAccessor(function (d) {
+        //     return d.value.avg;
+        // })
+        // // Stack additional layers with `.stack`. The first paramenter is a new group.
+        // // The second parameter is the series name. The third is a value accessor.
+        // .stack(monthlyMoveGroup, 'Monthly Index Move', function (d) {
+        //     return d.value;
+        // })
+        // // Title can be called by any stack layer.
+        // .title(function (d) {
+        //     var value = d.value.avg ? d.value.avg : d.value;
+        //     if (isNaN(value)) {
+        //         value = 0;
+        //     }
+        //     return dateFormat(d.key) + '\n' + numberFormat(value);
+        // });
+
+    //#### Range Chart
+
+    // Since this bar chart is specified as "range chart" for the area chart, its brush extent
+    // will always match the zoom of the area chart.
+    timeChart.width(990) /* dc.barChart('#monthly-volume-chart', 'chartGroup'); */
+        .height(40)
+        .margins({top: 0, right: 50, bottom: 20, left: 40})
+        //.dimension(moveMonths)
+        // /.group(volumeByMonthGroup)
+        .centerBar(true)
+        .gap(1)
+        .x(d3.time.scale().domain([0, 15]))
+        .round(d3.time.second.round)
+        .alwaysUseRounding(true)
+        .xUnits(d3.time.seconds);
 
 	dc.renderAll();
 });
