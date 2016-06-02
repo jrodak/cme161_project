@@ -17,11 +17,12 @@ def send_assets(path):
 def send_data():
     return app.make_response(open('app/data/data.json').read())
 
-@app.route('/data/<path:protocol>/')
-def send_data_protcol(protocol):
+@app.route('/data/<path:protocols>/')
+def send_data_protcol(protocols):
     with open('app/data/data.json') as data_file:
+        protocols = [p.lower() for p in protocols.split('+')]
         data_json = json.load(data_file)
-        return json.dumps([x for x in data_json if x['protocol'].lower() == protocol.lower()])
+        return json.dumps([x for x in data_json if x['protocol'].lower() in protocols])
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5050))
