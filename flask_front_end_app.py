@@ -20,9 +20,8 @@ def send_data():
 @app.route('/data/<path:protocols>/')
 def send_data_protcol(protocols):
     with open('app/data/data.json') as data_file:
-        protocols = [p.lower() for p in protocols.split('+')]
         data_json = json.load(data_file)
-        return json.dumps([x for x in data_json if x['protocol'].lower() in protocols])
+        return json.dumps([x for x in data_json if any(y.lower() in [z.lower() for z in x['protocols']] for y in protocols.split('+'))])
 
 @app.route('/data/protocol_tree/')
 def send_data_tree():
