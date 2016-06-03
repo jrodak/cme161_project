@@ -1,0 +1,147 @@
+{
+	"name": "Ethernet",
+	"children" : [
+		{
+			"name" : "IPv4",
+			"children" : [
+				{
+					"name" : "TCP",
+					"children": [
+						{
+							"name" : "TLSv1",
+							"children" : []
+						},
+
+						{
+							"name" : "TLSv1.2",
+							"children" : []
+						},
+
+						{
+							"name" : "SSL",
+							"children" : []
+						},
+
+						{
+							"name" : "HTTP",
+							"children" : []
+						}
+					]
+				},
+
+				{
+					"name" : "UDP",
+					"children" : [
+						{
+							"name" : "DNS",
+							"children" : []
+						},
+
+						{
+							"name" : "QUIC",
+							"children" : []
+						},
+
+						{
+							"name" : "NBNS",
+							"children" : []
+						}
+					]
+				},
+
+
+				{
+					"name" : "IGMPv2",
+					"children" : []
+				},
+
+				{
+					"name" : "ICMP",
+					"children" : []
+				},
+
+				{
+					"name" : "ICMPv6",
+					"children" : []
+				}
+
+
+			]
+
+
+
+		},
+
+		{
+			"name" : "IPv6",
+			"children" : [
+				{
+					"name" : "TCP",
+					"children": [
+						{
+							"name" : "TLSv1",
+							"children" : []
+						},
+
+						{
+							"name" : "TLSv1.2",
+							"children" : []
+						},
+
+						{
+							"name" : "SSL",
+							"children" : []
+						},
+
+						{
+							"name" : "HTTP",
+							"children" : []
+						}
+					]
+				},
+
+				{
+					"name" : "UDP",
+					"children" : [
+						{
+							"name" : "DNS",
+							"children" : []
+						},
+
+						{
+							"name" : "QUIC",
+							"children" : []
+						},
+
+						{
+							"name" : "NBNS",
+							"children" : []
+						}
+					]
+				},
+
+
+				{
+					"name" : "IGMPv2",
+					"children" : []
+				},
+
+				{
+					"name" : "ICMP",
+					"children" : []
+				},
+
+				{
+					"name" : "ICMPv6",
+					"children" : []
+				}
+
+
+			]
+
+
+
+		}
+
+	]
+}

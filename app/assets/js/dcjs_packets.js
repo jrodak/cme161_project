@@ -44,6 +44,8 @@ d3.json("/data/", function(json) {
 	window.protocol_names = _.chain(json).pluck("protocol").uniq().value();
 	window.set_names = _.chain(json).pluck('set').uniq().value();
 
+	console.log(protocol_names);
+
 	var idle_group = time.group().reduceSum(function(d) { return d.set == 'Idle' ? 1 : 0; });
 	var ny_group = time.group().reduceSum(function(d) { return d.set == 'NYTimes' ? 1 : 0; });
 	var google_group = time.group().reduceSum(function(d) { return d.set == 'Google' ? 1 : 0; });
@@ -81,7 +83,6 @@ d3.json("/data/", function(json) {
 		.dimension(protocol)
 		.group(protocol_sum)
 		.valueAccessor(function(d) {
-			console.log(d.value);
 			return d.value.count;
 		})
 		.legend(dc.legend());

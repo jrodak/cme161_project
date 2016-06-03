@@ -24,9 +24,25 @@ def send_data_protcol(protocols):
         data_json = json.load(data_file)
         return json.dumps([x for x in data_json if x['protocol'].lower() in protocols])
 
+@app.route('/data/protocol_tree/')
+def send_data_tree():
+	with open('app/data/data.json') as data_file:
+		with open('app/data/tree.json') as tree_file:
+			data = json.load(data_file)
+			tree = json.load(tree_file)
+			compute_node_count(tree, data, set([tree['name']]))
+		return json.dumps(tree)
+
+# For each node in the protocol tree, compute the number of packets that use
+# the set of protocols of the node and all of its ancestors
+def compute_node_count(tree, data, protocols):
+	tree['count'] = len([x for x in data if protocols <= set(x['protocols'])])
+	for child in tree['children']:
+		compute_node_count(child, data, protocols | set([child['name']]))
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5050))
-    app.run(host='0.0.0.0', port=port, debug=False)
+    app.run(host='0.0.0.0', port=port, debug=True)
 
 
 
