@@ -43,13 +43,15 @@ d3.json("/data/", function(json) {
 	var set_sum = set.group().reduceCount();
 
 
-	var max_time = time.top(1)[0].time;
-	console.log(max_time);
-
 	window.protocol_names = _.chain(json).pluck("protocol").uniq().value();
 	window.set_names = _.chain(json).pluck('set').uniq().value();
+	window.hardware_dst = _.chain(json).pluck('protocol').uniq().value();
 
-	console.log(protocol_names);
+
+	var idle_group = time.group().reduceSum(function(d) { return d.set == 'Idle' ? 1 : 0; });
+	var ny_group = time.group().reduceSum(function(d) { return d.set == 'NYTimes' ? 1 : 0; });
+	var google_group = time.group().reduceSum(function(d) { return d.set == 'Google' ? 1 : 0; });
+
 
 	var protocol_chart = dc
 		.barChart("#set_chart")
@@ -61,22 +63,31 @@ d3.json("/data/", function(json) {
 		.x(d3.scale.ordinal().domain(set_names))
 		.xUnits(dc.units.ordinal);
 
-	// var time_chart = dc
-	// 	.barChart("#time_chart")
-	// 	.width(750)
-	// 	.height(200)
-	// 	.dimension(time)
-	// 	.group(time_sum)
-	// 	.centerBar(true)
-	// 	.x(d3.scale.linear().domain([0, max_time]))
-	// 	.xUnits(d3.time.seconds);
+	var time_chart = dc.compositeChart("#time_chart");
 
-	// var dest_pie_chart = dc
-	// 	.pieChart("#dest_pie_chart")
-	// 	.width(750)
-	// 	.height(200)
-	// 	.dimension(dest)
-	// 	.group(dest_sum);
+	time_chart
+		.width(750)
+		.height(200)
+		.dimension(time)
+		.x(d3.scale.linear().domain([0, 15]))
+		.compose([
+			dc.lineChart(time_chart).group(idle_group),
+			dc.lineChart(time_chart).group(ny_group),
+			dc.lineChart(time_chart).group(google_group)
+		]);
+
+
+	var prot_pie_chart = dc
+		.pieChart("#prot_pie_chart")
+		.width(300)
+		.height(300)
+		.slicesCap(4)
+		.innerRadius(100)
+		.minAngleForLabel(0.25)
+		.dimension(protocol)
+		.group(protocol_sum)
+		.legend(dc.legend());
+
 
 	dc.renderAll();
 });

@@ -38,17 +38,40 @@
 
 					<p id="project_description">
 					While browsing the web, we rarely think about the complex systems and technologies that make it all possible. We simply type a URL into our browsers and then, like magic, we receive the requested page. This project will allow us to dive into the often ignored details of our web browsing. Using <a href="https://www.wireshark.org/">Wireshark</a> we captured all network packets received and sent by a laptop on a university WiFi network. We captured packets in the following scenarios for 15 seconds each:
+					</p>
 					<ol>
 					<li>Idle, no web browser open</li>
-					<li>Browsing Google and search results/li>
+					<li>Browsing Google and search results</li>
 					<li>Browsing NYTimes homepage and articles</li>
 					</ol>
-					</p>
 
 
-					<div style="float:left;">
-					  <h4> # of Packets Captured in 5 seconds </h4>
+					<div class=".col-xs-12 .col-md-8">
+					  <h4> Total Number of Packets Captured</h4>
 					  <div id="set_chart"></div>
+					  <p style="float:left;">
+					  There are two primary points to take away from this data. First, we can see that even while idle our computers are sending and receiving packets. In this case these packets were most DNS messages. Second, we can see that sites such as the New York Times which display a large number of images and advertisements than sites like Google, where most most of the content is simple text.
+					  </p>
+					</div>
+
+					
+
+
+
+					<div class=".col-xs-12 .col-md-8" style="float:left;">
+					  <h4> Number of Packets Captured over time </h4>
+					  <div id="time_chart"></div>
+					  <p style="float:left;">
+					  	Here we see what's commonly referred to as the "burstiness" of network traffic. Instead of a relatively continous stream of packets, we see that the packets are sent and receivied in bursts in a short amount of time after a web request is made.
+					  </p>
+					</div>
+
+					<div class=".col-xs-12 .col-md-8" style="float:left;">
+					  <h4> Protocol Types of Packets</h4>
+					  <div id="prot_pie_chart"></div>
+					  <p style="float:left;">
+
+					  </p>
 					</div>
 
 					<!-- visualizations here -->
