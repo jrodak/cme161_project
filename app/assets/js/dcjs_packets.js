@@ -24,29 +24,25 @@ d3.json("/data/", function(json) {
 	var reduce_add = function(p, v, nf) {
 		++p.count;
 		p.total_length += v.length;
-		p.avg_length = p.total / p.count;
+		p.avg_length = p.total_length / p.count;
 		return p;
 	};
 
 	var reduce_remove = function(p, v, nf) {
 		--p.count;
 		p.total_length -= v.length;
-		p.avg_length = (p.count > 0) ? p.total / p.count : 0;
+		p.avg_length = (p.count > 0) ? p.total_length / p.count : 0;
 		return p;
 	};
 
-	// var time_sum = time.group().reduce(reduce_add, reduce_remove, reduce_init);
-	// var protocol_sum = time.group().reduce(reduce_add, reduce_remove, reduce_init);
-	var time_sum = time.group().reduceCount();
-	var protocol_sum = protocol.group().reduceCount();
+	var time_sum = time.group().reduce(reduce_add, reduce_remove, reduce_init);
+	var protocol_sum = protocol.group().reduce(reduce_add, reduce_remove, reduce_init);
 	var dest_sum = dest.group().reduceCount();
 	var set_sum = set.group().reduceCount();
 
 
 	window.protocol_names = _.chain(json).pluck("protocol").uniq().value();
 	window.set_names = _.chain(json).pluck('set').uniq().value();
-	window.hardware_dst = _.chain(json).pluck('protocol').uniq().value();
-
 
 	var idle_group = time.group().reduceSum(function(d) { return d.set == 'Idle' ? 1 : 0; });
 	var ny_group = time.group().reduceSum(function(d) { return d.set == 'NYTimes' ? 1 : 0; });
@@ -64,7 +60,6 @@ d3.json("/data/", function(json) {
 		.xUnits(dc.units.ordinal);
 
 	var time_chart = dc.compositeChart("#time_chart");
-
 	time_chart
 		.width(750)
 		.height(200)
@@ -81,11 +76,14 @@ d3.json("/data/", function(json) {
 		.pieChart("#prot_pie_chart")
 		.width(300)
 		.height(300)
-		.slicesCap(4)
 		.innerRadius(100)
 		.minAngleForLabel(0.25)
 		.dimension(protocol)
 		.group(protocol_sum)
+		.valueAccessor(function(d) {
+			console.log(d.value);
+			return d.value.count;
+		})
 		.legend(dc.legend());
 
 
