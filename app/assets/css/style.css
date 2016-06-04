@@ -57,6 +57,10 @@ body {
   color: black;
 }
 
+.btn-btn {
+  padding: 0;
+}
+
 .header {
   font-size: 24px;
 }
