@@ -254,31 +254,46 @@ d3.json("/data/", function(json) {
 			{
 				label : 'Avg Length (bytes)',
 				format : function(d) {
-					return Math.round(d.value.avg_length);
+					if (d.value.count > 0)
+						return Math.round(d.value.avg_length);
+					else
+						return '-';
 				}
 			},
 			{
 				label : 'Median Length (bytes)',
 				format : function(d) {
-					return d.value.median_length;
+					if (d.value.count > 0)
+						return d.value.median_length;
+					else
+						return '-';
 				}
 			},
 			{
 				label : 'Mode Length (bytes)',
 				format : function(d) {
-					return d.value.mode_length;
+					if (d.value.count > 0)
+						return d.value.mode_length;
+					else
+						return '-';
 				}
 			},
 			{
 				label : 'Min Length (bytes)',
 				format : function(d) {
-					return d.value.min_length;
+					if (d.value.count > 0)
+						return d.value.min_length;
+					else
+						return '-';
 				}
 			},
 			{
 				label : 'Max Length (bytes)',
 				format : function(d) {
-					return d.value.max_length;
+					if (d.value.count > 0)
+						return d.value.max_length;
+					else
+						return '-';
 				}
 			}
 		])
@@ -301,7 +316,6 @@ d3.json("/data/", function(json) {
           .attr("class","btn-btn")
           .append("div")
           .attr("class","label btn-label")
-          // .style('float', 'right')
           .text(function(d) { return "Reset";})
           .on("click", function(){
           	  set_chart.filter(null);
