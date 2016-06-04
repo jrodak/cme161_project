@@ -356,11 +356,9 @@ var visualize = function() {
 }
 
 var refresh = function(d) {
-	if (!d.children) return;
-
 	root = d;
-
 	document.getElementById("back").disabled = (root.parent) ? false : true;
+	document.getElementById("layer_info").innerText = protocol_descriptions[root.name];
 
 	var pack = d3.layout.pack()
 		.size([diameter - 5, diameter - 5])
@@ -401,12 +399,15 @@ var refresh = function(d) {
 		.style("text-anchor", "start")
 		.style("font", "10px sans-serif")
 		.text(function(d) { return d.name; });
-		
+
+	node.append("title")
+		.text(function(d) { return "Packet Count: " + d.count; });
+
 }
 
 var back = function() {
 	if (!root.parent) return;
-	root = root.parent
+	root = root.parent;
 	refresh(root);
 }
 
