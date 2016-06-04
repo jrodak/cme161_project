@@ -313,7 +313,7 @@ d3.json("/data/", function(json) {
         d3.selectAll(".resetButton")
           .append("button")
           .attr("type","button")
-          .attr("class","btn-btn")
+          .attr("class","btn-btn btn btn-info")
           .append("div")
           .attr("class","label btn-label")
           .text(function(d) { return "Reset";})
