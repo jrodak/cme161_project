@@ -122,14 +122,43 @@ d3.json("/data/", function(json) {
 	var google_group = time.group().reduceSum(function(d) { return d.set == 'Google' ? 1 : 0; });
 
 
-	var colors = ['rgb(255,0,0)', 'rgb(0,255,0', 'rgb(0,0,255)'];
+	var colors = ['#1f78b4', '#a6cee3', '#b2df8a'];
 	var colorAccessor = function(d) {
 		var set = d.key;
 		return set_names.indexOf(set);
 	};
 
+	// fixes brushing on composite charts
+	// https://github.com/dc-js/dc.js/issues/878
+	// http://jsfiddle.net/cBgkT/1/
+	(function() {
+	    var compositeChart = dc.compositeChart;
+	    dc.compositeChart = function(parent, chartGroup) {
+	        var _chart = compositeChart(parent, chartGroup);
+	        
+	        _chart._brushing = function () {
+	            var extent = _chart.extendBrush();
+	            var rangedFilter = null;
+	            if(!_chart.brushIsEmpty(extent)) {
+	                rangedFilter = dc.filters.RangedFilter(extent[0], extent[1]);
+	            }
 
-	var protocol_chart = dc
+	            dc.events.trigger(function () {
+	                if (!rangedFilter) {
+	                    _chart.filter(null);
+	                } else {
+	                    _chart.replaceFilter(rangedFilter);
+	                }
+	                _chart.redrawGroup();
+	            }, dc.constants.EVENT_DELAY);
+	        };
+	        
+	        return _chart;
+	    };
+	})();
+
+
+	var set_chart = dc
 		.barChart("#set_chart")
 		.width(750)
 		.height(200)
@@ -141,8 +170,7 @@ d3.json("/data/", function(json) {
 		.colors(colors)
 		.colorDomain([0, 3])
 		.colorAccessor(colorAccessor)
-		.renderTitle(true)
-		.title();
+		.yAxisLabel('', 50);
 
 	var time_chart = dc.compositeChart("#time_chart");
 	var idle_line_chart = dc
@@ -175,6 +203,11 @@ d3.json("/data/", function(json) {
 		.group(ny_group, 'NYTimes')
 		.x(d3.scale.linear().domain([0, 15]))
 		.xUnits(dc.units.fp)
+		.renderTitle(true)
+		.title(function(d) {
+			return d.value.count;
+		})
+		.yAxisLabel('', 50)
 		.colors(colors)
 		.colorDomain([0, 3])
 		.colorAccessor(function(d) { 
@@ -184,6 +217,7 @@ d3.json("/data/", function(json) {
 	time_chart
 		.width(1250)
 		.height(500)
+		.dimension(time)
 		.x(d3.scale.linear().domain([0, 15]))
 		.xUnits(dc.units.fp)
 		.colors(colors)
@@ -194,7 +228,7 @@ d3.json("/data/", function(json) {
 			google_line_chart,
 			ny_line_chart
 		])
-		.brushOn(false)
+		// .brushOn(false) // brushing currently buggy for composite charts
 		.legend(dc.legend().x(1200).y(10).gap(25));
 
 	var stats_table = dc
@@ -256,19 +290,33 @@ d3.json("/data/", function(json) {
 			table.selectAll('.dc-table-group').classed('info', true);
 		});
 
-
-	// var prot_pie_chart = dc
-	// 	.pieChart("#prot_pie_chart")
-	// 	.width(300)
-	// 	.height(300)
-	// 	.innerRadius(100)
-	// 	.minAngleForLabel(0.25)
-	// 	.dimension(protocol)
-	// 	.group(protocol_sum)
-	// 	.valueAccessor(function(d) {
-	// 		return d.value.count;
-	// 	})
-	// 	.legend(dc.legend());
+	var showButton = function() {
+      if (set_chart.filters().length > 0 || time_chart.filters().length > 0) {
+        d3.selectAll(".btn-btn")
+          .remove();
+        
+        d3.selectAll(".resetButton")
+          .append("button")
+          .attr("type","button")
+          .attr("class","btn-btn")
+          .append("div")
+          .attr("class","label btn-label")
+          // .style('float', 'right')
+          .text(function(d) { return "Reset";})
+          .on("click", function(){
+          	  set_chart.filter(null);
+          	  time_chart.filter(null);
+              dc.redrawAll();
+          });
+            
+      } else {
+           d3.selectAll(".btn-btn")
+              .remove();
+      }
+    };
+    
+    set_chart.on('filtered', showButton);
+    time_chart.on('filtered', showButton);
 
 
 	dc.renderAll();

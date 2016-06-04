@@ -47,15 +47,16 @@
 
 
 					<div class=".col-xs-12 .col-md-8">
-					  <h3> Total Number of Packets Captured</h3>
-					  <div id="set_chart"></div>
+					  <div class="header">Total Number of Packets Captured   <span class="resetButton"></span></div>
+					  <div id="set_chart">
+					  </div>
 					  <p style="float:left;">
-					  There are two primary points to take away from this data. First, we can see that even while idle our computers are sending and receiving packets. In this case these packets were most DNS messages. Second, we can see that sites such as the New York Times which display a large number of images and advertisements than sites like Google, where most most of the content is simple text.
+					  There are two primary points to take away from this data. First, we can see that even while idle our computers are sending and receiving packets. In this case these packets were most DNS messages. Second, we can see that sites such as the New York Times which display a large number of images and advertisements than sites like Google, where most most of the content is simple text. <b> Click on each of the bars to filter the data by experiment.</b>
 					  </p>
 					</div>
 
 					<div class=".col-xs-12 .col-md-8" style="float:left;">
-					  <h3> Number of Packets Captured over time </h3>
+					  <div class="header">Number of Packets Captured over time   <span class="resetButton"></span></div>
 					  <div id="time_chart"></div>
 					  <p style="float:left;">
 					  	Here we see what's commonly referred to as the "burstiness" of network traffic. Instead of a relatively continous stream of packets, we see that the packets are sent and receivied in bursts in a short amount of time after a web request is made.
@@ -64,7 +65,7 @@
 
 
 					<div class=".col-xs-12 .col-md-8" style="float:left;">
-					  <h3> Packet Statistics </h3>
+					  <div class="header">Packet Statistics   <span class="resetButton"></span></div>
 					  <table id="stats_table" class="table table-hover">
 
 					  </table>
