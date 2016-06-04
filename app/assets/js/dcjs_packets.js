@@ -105,61 +105,75 @@ d3.json("/data/", function(json) {
 });
 
 
-/*	TODO
-		1. Combine d3.json() call from above and below into one nested (optional?)
-		2. Add onclick functionality to redraw pack layout 
-			( similar to: http://stackoverflow.com/questions/18790941/updating-the-data-of-a-pack-layout-from-json-call-and-redrawing )
-		3. Add label other nodes besides children / make it appear at top of node (play around with dy attr)
-	
-*/
+var diameter = 500
+var svg = d3.select("#layer_bubbles")
+	.append("svg")
+    .attr("width", diameter)
+    .attr("height", diameter)
+  	.append("g")
+	.attr("transform", "translate(2,2)");
 
+var root;
+var visualize = function() {
+	d3.json("/data/protocol_tree/", function(error, data) {
+		root = data
+		refresh(root);
+	});
+}
 
-d3.json("/data/protocol_tree/", function(error, root) {
-	if (error) throw error;
-	console.log(root);
+var refresh = function(d) {
+	if (!d.children) return;
 
-	var diameter = 500
+	root = d
+
+	document.getElementById("back").disabled = (root.parent) ? false : true;
 
 	var pack = d3.layout.pack()
-	    .size([diameter - 5, diameter - 5])
-	    .value(function(d) { return Math.max(Math.round((d.count/6879) * 100000), 100000) }) 
-	    // TODO: remove hard coded numbers (without the max, leaf circles are too small to be seen)
+		.size([diameter - 5, diameter - 5])
+		.value(function(d) { return Math.max(Math.round((d.count/root.count) * 100), 1) })
 
-	var svg = d3.select("#layer_bubbles").append("svg")
-	    .attr("width", diameter)
-	    .attr("height", diameter)
-	  	.append("g")
-	    .attr("transform", "translate(2,2)");
+	svg.selectAll(".node").remove()
 
-  	var node = svg.datum(root).selectAll(".node")
-		.data(pack.nodes)
-		.enter()
+	var node = svg
+		.selectAll(".node")
+		.data(pack.nodes(d));
+
+	node.enter()
 		.append("g")
 		.attr("class", function(d) { return d.children ? "node" : "leaf node"; })
-		.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+		.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
+		.on("click", refresh);
 
-	// node.append("title")
-	// 	.text(function(d) { return d.name; });
-
-	node.append("circle")
-		.attr("r", function(d) { return d.r; })
+	node.filter(function(d) { return d.count > 0; })
+		.append("circle")
 		.style("fill", "rgb(31, 119, 180)")
 		.style("fill-opacity", ".25")
 		.style("stroke", "rgb(31, 119, 180)")
-		.style("stroke-width", "1px");
-
-	// Make the "leaf" (highest layer) orange
+		.style("stroke-width", "1px")
+		.transition()
+		.duration(1000)
+		.attr("r", function(d) { return d.r; })
+            
+	//Make the "leaf" (highest layer) orange
 	node.filter(function(d) { return !d.children; })
 		.select("circle")
 		.style("fill", "#ff7f0e")
-  		.style("fill-opacity", 1)
+		.style("fill-opacity", 1)
 
-  	// Append text only to leaf nodes (for now), will change
-	node//.filter(function(d) { return !d.children; })
+	//Append text only to leaf nodes (for now), will change
+	node.filter(function(d) { return d.count > 0; })
 		.append("text")
-		.attr("dy", ".35em")
-		.style("text-anchor", "middle")
+		.attr("transform", function(d) { return "translate(" + -d.r*.5 + "," + d.r*.40 + ")"; })
+		.style("text-anchor", "start")
 		.style("font", "10px sans-serif")
 		.text(function(d) { return d.name; });
 
-});
+}
+
+var back = function() {
+	if (!root.parent) return;
+	root = root.parent
+	refresh(root);
+}
+
+visualize();
