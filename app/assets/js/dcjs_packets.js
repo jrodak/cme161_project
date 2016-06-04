@@ -396,4 +396,23 @@ d3.json("/data/protocol_tree/", function(error, root) {
 		.style("font", "10px sans-serif")
 		.text(function(d) { return d.name; });
 
+
+	var protocol_descriptions = {
+		"Ethernet" : "Ethernet protocols operate on the \"link layer\" and are responsible for the physical delivery of packets",
+		"UDP" : "This protocol is similar to TCP but does not have measures to guarantee packet delivery.",
+		"TCP" : "This protocol is a \"transport layer\" protocol. The TCP protocols involves sending messages acknowleding the delivery of application data, so that the sender can ensure the data was actually delivered.",
+		"IPv4" : "IPv4 and IPv6 are both \"network layer\" protocols. IP packets store the IP addresses of the sender and recipient so that the packet is routed correctly. The IP protocol does not guarantee packet delivery, so the packet may not reach its destination.",
+		"IPv6" : "IPv4 and IPv6 are both \"network layer\" protocols. IP packets store the IP addresses of the sender and recipient so that the packet is routed correctly.  The IP protocol does not guarantee packet delivery, so the packet may not reach its destination.",
+		"HTTP" : "HTTP packets contain the information of our web requests.",
+		"TLSv1" : "TLS and SSL are used to encrypt data and protect its contents from others that may see it. These protocols are commonly used to encrypt HTTP data.",
+		"TLSv1.2" : "TLS and SSL are used to encrypt data and protect its contents from others that may see it. These protocols are commonly used to encrypt HTTP data.",
+		"SSL" : "TLS and SSL are used to encrypt data and protect its contents from others that may see it. These protocols are commonly used to encrypt HTTP data.",
+		"DNS" : "DNS is used to resolve hostnames such as www.gooogle.com to IP addresses.",
+		"QUIC" : "QUIC is an experimental alternative to TCP that was developed at Google.",
+		"IGMPv2" : "IGMPv2 is a \"network protocol\" that is used for broadcasting data to many others.",
+		"NBNS" : "NBNS is an older protocol that serves a similar purpose to DNS.",
+		"ICMP" : "ICMP and ICMPv6 are for communications between network devices such as routers. ICMP does not send application data but instead for sending error messages such as when a requested host is unreachable.",
+		"ICMPv6" : "ICMP and ICMPv6 are for communications between network devices such as routers. ICMP does not send application data but instead for sending error messages such as when a requested host is unreachable.",
+	};
+
 });
